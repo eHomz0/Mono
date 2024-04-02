@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mono-Alphabetical Substitution Cipher</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            width: 200px;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Mono-Alphabetical Substitution Cipher</h1>
+
+    <form id="cipherForm">
+        <label for="plaintext">Plaintext:</label><br>
+        <input type="text" id="plaintext" name="plaintext" value="HELLO" oninput="validateInput('plaintext')"><br>
+        <label for="key">Key:</label><br>
+        <input type="text" id="key" name="key" value="QWERTYUIOPASDFGHJKLZXCVBNM" maxlength="26" oninput="validateInput('key')"><br><br>
+        <button type="button" onclick="encrypt()">Encrypt</button>
+        <button type="button" onclick="decrypt()">Decrypt</button>
+    </form>
+
+    <p id="result"></p>
+</div>
+
+<script>
+    function validateInput(inputType) {
+        const inputElement = document.getElementById(inputType);
+        inputElement.value = inputElement.value.replace(/[^a-zA-Z]/g, '');
+    }
+
+    function monoalphabetic_encrypt(plaintext, key) {
+        let ciphertext = '';
+        for (let char of plaintext.toUpperCase()) {
+            if (char >= 'A' && char <= 'Z') {
+                let index = char.charCodeAt(0) - 'A'.charCodeAt(0);
+                ciphertext += key[index];
+            } else {
+                ciphertext += char;
+            }
+        }
+        return ciphertext;
+    }
+
+    function monoalphabetic_decrypt(ciphertext, key) {
+        let plaintext = '';
+        for (let char of ciphertext.toUpperCase()) {
+            let index = key.indexOf(char);
+            if (index != -1) {
+                plaintext += String.fromCharCode('A'.charCodeAt(0) + index);
+            } else {
+                plaintext += char;
+            }
+        }
+        return plaintext;
+    }
+
+    function encrypt() {
+        const plaintext = document.getElementById('plaintext').value;
+        const key = document.getElementById('key').value.toUpperCase();
+        const encrypted_text = monoalphabetic_encrypt(plaintext, key);
+        document.getElementById('result').textContent = "Encrypted: " + encrypted_text;
+    }
+
+    function decrypt() {
+        const ciphertext = document.getElementById('result').textContent.split(' ')[1];
+        const key = document.getElementById('key').value.toUpperCase();
+        const decrypted_text = monoalphabetic_decrypt(ciphertext, key);
+        document.getElementById('result').textContent = "Decrypted: " + decrypted_text;
+    }
+</script>
+
+</body>
+</html>
